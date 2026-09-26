@@ -3,50 +3,555 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vactori</title>
+<title>Vactori Pro</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#fff;color:#211b2d}
-.bg{min-height:100vh;background:radial-gradient(circle at 15% 15%,#eadcff 0 2px,transparent 3px),radial-gradient(circle at 80% 20%,#d7b9ff 0 2px,transparent 3px),radial-gradient(circle at 35% 75%,#eadcff 0 2px,transparent 3px),#fff;background-size:180px 180px}
-.wrap{max-width:1050px;margin:auto;padding:24px}
-header{display:flex;justify-content:space-between;align-items:center;padding:10px 0 28px}
-.logo{font-size:30px;font-weight:800;color:#7c3aed}.logo span{color:#b084f5}
-.btn{border:0;border-radius:14px;padding:13px 20px;font-size:16px;font-weight:700;cursor:pointer;background:#7c3aed;color:white}
-.hero{text-align:center;padding:65px 15px 45px}.hero h1{font-size:42px;margin:10px 0;color:#251735}.hero p{font-size:19px;color:#6b6276}
-.panel{display:none;background:#fff;border:1px solid #eadff7;border-radius:24px;padding:24px;box-shadow:0 15px 45px #6d28d91a}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-top:20px}
-.card{border:1px solid #eee5f7;border-radius:18px;padding:22px;background:#fff;cursor:pointer;transition:.2s}
-.card:hover{transform:translateY(-3px);box-shadow:0 10px 25px #6d28d91a}
-.icon{font-size:30px}.card h3{margin:10px 0 6px}.muted{color:#777}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px}.back{background:#f2eafd;color:#6d28d9}
-footer{text-align:center;color:#8a8193;padding:35px 0}
+:root{--p:#7c3aed;--p2:#a855f7;--bg:#f7f5fb;--card:#fff;--text:#211b2d;--muted:#766d80;--line:#e9e2f1;--ok:#16a34a;--danger:#dc2626;--warn:#d97706;--shadow:0 12px 35px #5b21b610}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:var(--bg);color:var(--text)}
+body.dark{--bg:#111014;--card:#1b181f;--text:#f5f1f8;--muted:#aaa1b2;--line:#302a35;--shadow:0 12px 35px #0006}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:none}.app.authed{display:flex}.side{width:250px;background:var(--card);border-left:1px solid var(--line);padding:20px 14px;position:fixed;right:0;top:0;bottom:0;z-index:5}
+.brand{font-size:28px;font-weight:900;color:var(--p);padding:10px 12px 24px}.brand span{color:var(--p2)}
+.nav{display:grid;gap:6px}.nav button{border:0;background:transparent;text-align:right;padding:12px 14px;border-radius:12px;color:var(--muted);font-weight:700}.nav button:hover,.nav button.active{background:#7c3aed12;color:var(--p)}
+.main{margin-right:250px;width:calc(100% - 250px);padding:22px;min-height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}.topbar h1{margin:0;font-size:25px}.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:10px 15px;font-weight:800;background:var(--p);color:#fff}.btn.secondary{background:#eee8f6;color:var(--p)}body.dark .btn.secondary{background:#29222f}.btn.danger{background:#fee2e2;color:#991b1b}.btn.ok{background:#dcfce7;color:#166534}
+.search{padding:11px 14px;border:1px solid var(--line);background:var(--card);border-radius:12px;color:var(--text);min-width:220px}
+.page{display:none}.page.active{display:block}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.kpi small{color:var(--muted)}.kpi b{font-size:28px;display:block;margin-top:7px;color:var(--p)}
+.two{display:grid;grid-template-columns:1.5fr 1fr;gap:15px;margin-top:15px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:15px}
+.card h2,.card h3{margin-top:0}.muted{color:var(--muted)}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.list{display:grid;gap:10px}.item{padding:12px;border:1px solid var(--line);border-radius:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.table-wrap{overflow:auto}.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:15px 0}.field{display:grid;gap:5px}.field label{font-size:13px;color:var(--muted);font-weight:700}.field input,.field select,.field textarea{width:100%;padding:11px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px}.field textarea{min-height:80px}
+table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th{color:var(--muted);font-size:13px}
+.badge{padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;display:inline-block}.b-ok{background:#dcfce7;color:#166534}.b-warn{background:#fef3c7;color:#92400e}.b-danger{background:#fee2e2;color:#991b1b}.b-purple{background:#ede9fe;color:#6d28d9}
+.progress{height:9px;background:#eee8f6;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--p),var(--p2));border-radius:20px}
+.toast{position:fixed;left:22px;bottom:22px;background:#211b2d;color:#fff;padding:13px 16px;border-radius:13px;display:none;z-index:20;box-shadow:0 10px 30px #0004}
+.modal{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;z-index:15;padding:20px}.modal .box{background:var(--card);width:min(600px,100%);max-height:90vh;overflow:auto;border-radius:20px;padding:20px}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.day{min-height:90px;border:1px solid var(--line);border-radius:10px;padding:8px}.day strong{font-size:12px}.event{font-size:11px;background:#ede9fe;color:#5b21b6;border-radius:6px;padding:4px;margin-top:5px;overflow:hidden}
+.chart{display:flex;align-items:flex-end;gap:10px;height:190px;padding-top:20px}.bar{flex:1;background:linear-gradient(180deg,var(--p2),var(--p));border-radius:8px 8px 0 0;min-width:15px}.barbox{text-align:center;flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end}.barbox span{font-size:11px;color:var(--muted);margin-top:5px}
+.empty{text-align:center;padding:30px;color:var(--muted)}
+.mobile{display:none}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.side{width:210px}.main{margin-right:210px;width:calc(100% - 210px)}}
+@media(max-width:700px){.side{display:none}.main{margin:0;width:100%;padding:14px}.mobile{display:block}.grid,.three{grid-template-columns:1fr}.search{min-width:150px}.topbar{align-items:flex-start;flex-direction:column}}
+
+.auth-screen{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 15% 20%,#eadcff 0 2px,transparent 3px),radial-gradient(circle at 85% 15%,#d7b9ff 0 2px,transparent 3px),linear-gradient(135deg,#faf7ff,#fff);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-box{width:min(460px,100%);background:#fff;border:1px solid #eadff7;border-radius:28px;padding:30px;box-shadow:0 25px 80px #5b21b626}
+.auth-logo{text-align:center;font-size:36px;font-weight:900;color:#7c3aed}.auth-logo span{color:#a855f7}.auth-sub{text-align:center;color:#766d80;margin:8px 0 24px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;background:#f4effa;padding:4px;border-radius:13px;margin-bottom:18px}.auth-tabs button{border:0;padding:11px;border-radius:10px;background:transparent;font-weight:800;color:#766d80}.auth-tabs button.active{background:#fff;color:#7c3aed;box-shadow:0 3px 10px #0000000d}
+.auth-form{display:grid;gap:12px}.auth-field{display:grid;gap:6px}.auth-field label{font-size:13px;font-weight:800;color:#655b70}.auth-field input{padding:13px;border:1px solid #ded3e8;border-radius:12px;outline:none}.auth-field input:focus{border-color:#a855f7;box-shadow:0 0 0 3px #a855f71a}
+.auth-submit{border:0;border-radius:13px;padding:13px;background:#7c3aed;color:#fff;font-weight:900;font-size:16px}.auth-error{display:none;padding:10px;border-radius:11px;background:#fee2e2;color:#991b1b;font-size:13px}.auth-success{display:none;padding:10px;border-radius:11px;background:#dcfce7;color:#166534;font-size:13px}.auth-foot{text-align:center;color:#8a8193;font-size:12px;margin-top:16px;line-height:1.6}
+.user-chip{display:flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--muted);font-size:12px}
+.logout-btn{width:100%;margin-top:8px;border:0;border-radius:11px;padding:10px;background:#fee2e2;color:#991b1b;font-weight:800}
+
+.att-btn{border:0;border-radius:11px;padding:10px 13px;font-weight:900;background:#7c3aed;color:white}
+.clock{font-size:28px;font-weight:900;color:#7c3aed}
+.status-dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:#16a34a;margin-left:5px}
+
+.pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stage{background:#faf7ff;border:1px solid var(--line);border-radius:15px;padding:12px;min-height:180px}.deal{background:var(--card);border:1px solid var(--line);padding:10px;border-radius:10px;margin-top:8px}
+.pulse{animation:pulse 1.4s infinite}@keyframes pulse{50%{opacity:.55}}
+
+/* Vactori: scrollable task/navigation sidebar */
+.sidebar, aside.sidebar, .side, .nav-sidebar {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+.sidebar::-webkit-scrollbar, aside.sidebar::-webkit-scrollbar,
+.side::-webkit-scrollbar, .nav-sidebar::-webkit-scrollbar {
+  width: 7px;
+}
+.sidebar .nav, .sidebar nav, aside.sidebar nav,
+.side nav, .nav-sidebar nav {
+  padding-bottom: 110px;
+}
+@media (max-width: 800px) {
+  .sidebar, aside.sidebar, .side, .nav-sidebar {
+    max-height: 100vh !important;
+  }
+}
+
+
+/* Theme + logout move with the sidebar scroll */
+.sidebar-bottom-actions {
+  position: static !important;
+  margin: 16px 14px 28px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.sidebar, aside.sidebar, .side, .nav-sidebar {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  box-sizing: border-box;
+}
+.sidebar .nav, .sidebar nav, aside.sidebar nav, .side nav, .nav-sidebar nav {
+  padding-bottom: 0 !important;
+}
+
 </style>
 </head>
 <body>
-<div class="bg">
-<div class="wrap">
-<header><div class="logo"><span>V</span>actori ✦</div><button class="btn" onclick="openHome()">فتح الصفحة الرئيسية</button></header>
-<section id="welcome" class="hero">
-<h1>أهلًا بكم في تطبيق Vactori</h1>
-<p>نظّم عملك، عملاءك، مواعيدك وموظفيك بسهولة.</p>
-<button class="btn" onclick="openHome()">فتح الصفحة الرئيسية</button>
+
+<div id="authScreen" class="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo"><span>V</span>actori ✦</div>
+    <div class="auth-sub">منصة إدارة أعمالك — بأمان وسهولة</div>
+    <div class="auth-tabs">
+      <button id="loginTab" class="active" onclick="switchAuth('login')">تسجيل الدخول</button>
+      <button id="signupTab" onclick="switchAuth('signup')">إنشاء حساب</button>
+    </div>
+    <div id="authError" class="auth-error"></div>
+    <div id="authSuccess" class="auth-success"></div>
+    <form class="auth-form" onsubmit="submitAuth(event)">
+      <div class="auth-field" id="nameField" style="display:none">
+        <label>الاسم</label>
+        <input id="authName" autocomplete="name" placeholder="اسمك أو اسم النشاط">
+      </div>
+      <div class="auth-field">
+        <label>البريد الإلكتروني</label>
+        <input id="authEmail" type="email" autocomplete="email" required placeholder="name@example.com">
+      </div>
+      <div class="auth-field">
+        <label>كلمة المرور</label>
+        <input id="authPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="6 أحرف على الأقل">
+      </div>
+      <div class="auth-field" id="confirmField" style="display:none">
+        <label>تأكيد كلمة المرور</label>
+        <input id="authConfirm" type="password" autocomplete="new-password" placeholder="أعد كتابة كلمة المرور">
+      </div>
+      <label style="font-size:12px;color:#766d80;display:flex;gap:7px;align-items:center">
+        <input id="rememberMe" type="checkbox" checked> تذكرني على هذا الجهاز
+      </label>
+      <button class="auth-submit" id="authSubmit">تسجيل الدخول</button>
+    </form>
+    <div class="auth-foot">هذه النسخة تستخدم حسابات محلية على هذا الجهاز. عند ربط Supabase لاحقًا تصبح المصادقة سحابية وحقيقية.</div>
+  </div>
+</div>
+<div class="app" id="mainApp">
+<aside class="side">
+  <div class="brand"><span>V</span>actori ✦<small style="display:block;font-size:11px;color:var(--muted);margin-top:5px">Business OS</small></div><div id="userChip" class="user-chip" style="margin:0 0 12px"></div>
+  <div class="nav" id="nav">
+    <button class="active" onclick="go('dashboard',this)">🏠 لوحة التحكم</button>
+    <button onclick="go('customers',this)">👥 العملاء</button>
+    <button onclick="go('appointments',this)">📅 المواعيد</button>
+    <button onclick="go('tasks',this)">✅ المهام</button>
+    <button onclick="go('employees',this)">👨‍💼 الموظفون</button>
+<button onclick="go('attendance',this)">🕘 الحضور والانصراف</button>
+<button onclick="go('payroll',this)">💵 الرواتب والخصومات</button>
+<button onclick="go('leave',this)">🏖️ الإجازات</button>
+<button onclick="go('employeePortal',this)">🧑‍💻 بوابة الموظف</button>
+<button onclick="go('departments',this)">🏢 الأقسام</button>
+<button onclick="go('shifts',this)">🗓️ الورديات</button>
+<button onclick="go('invoices',this)">🧾 الفواتير</button>
+<button onclick="go('crm',this)">🎯 المبيعات CRM</button>
+<button onclick="go('tickets',this)">🎫 الدعم والشكاوى</button>
+<button onclick="go('notifications',this)">🔔 التنبيهات</button>
+<button onclick="go('activity',this)">🛡️ سجل النشاط</button>
+    <button onclick="go('finance',this)">💰 المالية</button>
+    <button onclick="go('inventory',this)">📦 المخزون</button>
+    <button onclick="go('notes',this)">📝 الملاحظات</button>
+    <button onclick="go('reports',this)">📊 التقارير</button>
+    <button onclick="go('settings',this)">⚙️ الإعدادات</button>
+  </div>
+  <div class="sidebar-bottom-actions">
+<button class="btn secondary" style="width:100%" onclick="toggleTheme()">🌙 الوضع الليلي</button>
+<button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+</div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div><h1 id="title">لوحة التحكم</h1><div class="muted" id="dateNow"></div></div>
+  <div class="actions"><input class="search" id="globalSearch" placeholder="🔎 بحث سريع..." oninput="globalSearch(this.value)"><button class="btn" onclick="quickAdd()">＋ إضافة</button></div>
+</header>
+
+<section id="dashboard" class="page active">
+  <div class="grid">
+    <div class="card kpi"><small>العملاء</small><b id="kCustomers">0</b><span class="muted">إجمالي العملاء</span></div>
+    <div class="card kpi"><small>مواعيد اليوم</small><b id="kToday">0</b><span class="muted">موعد مجدول</span></div>
+    <div class="card kpi"><small>المهام المفتوحة</small><b id="kTasks">0</b><span class="muted">تحتاج متابعة</span></div>
+    <div class="card kpi"><small>صافي الرصيد</small><b id="kBalance">0</b><span class="muted">دينار</span></div>
+  </div>
+  <div class="two">
+    <div class="card"><div class="row"><h2>المواعيد القادمة</h2><button class="btn secondary" onclick="go('appointments')">عرض الكل</button></div><div id="dashAppointments" class="list"></div></div>
+    <div class="card"><div class="row"><h2>المهام</h2><button class="btn secondary" onclick="go('tasks')">إدارة</button></div><div id="dashTasks" class="list"></div></div>
+  </div>
+  <div class="three">
+    <div class="card"><h3>الأداء المالي</h3><div class="chart" id="miniChart"></div></div>
+    <div class="card"><h3>المخزون منخفض</h3><div id="lowStock" class="list"></div></div>
+    <div class="card"><h3>اختصارات</h3><div class="list">
+      <button class="btn secondary" onclick="openModal('customer')">👤 عميل جديد</button>
+      <button class="btn secondary" onclick="openModal('appointment')">📅 موعد جديد</button>
+      <button class="btn secondary" onclick="openModal('expense')">💸 مصروف جديد</button>
+    </div></div>
+  </div>
 </section>
-<section id="home" class="panel">
-<div class="top"><div><h2>الصفحة الرئيسية</h2><div class="muted">كل أدواتك الأساسية في مكان واحد</div></div><button class="btn back" onclick="showWelcome()">الرئيسية</button></div>
-<div class="grid">
-<div class="card"><div class="icon">📋</div><h3>التنظيم</h3><div class="muted">المهام والمتابعة</div></div>
-<div class="card"><div class="icon">💾</div><h3>تنظيم البيانات</h3><div class="muted">حفظ وترتيب المعلومات</div></div>
-<div class="card"><div class="icon">👥</div><h3>تنظيم العملاء</h3><div class="muted">ملفات العملاء ومتابعتهم</div></div>
-<div class="card"><div class="icon">📅</div><h3>مواعيد العملاء</h3><div class="muted">المواعيد والتذكيرات</div></div>
-<div class="card"><div class="icon">👨‍💼</div><h3>الموظفين والرواتب</h3><div class="muted">إدارة الموظفين والرواتب</div></div>
-<div class="card"><div class="icon">📊</div><h3>التقارير</h3><div class="muted">ملخصات وإحصائيات</div></div>
+
+<section id="customers" class="page"><div class="card"><div class="row"><div><h2>إدارة العملاء</h2><span class="muted">ملفات العملاء ومتابعة بياناتهم</span></div><button class="btn" onclick="openModal('customer')">＋ عميل</button></div><div id="customersTable"></div></div></section>
+
+<section id="appointments" class="page"><div class="card"><div class="row"><div><h2>المواعيد</h2><span class="muted">جدولة المواعيد ومتابعتها</span></div><button class="btn" onclick="openModal('appointment')">＋ موعد</button></div><div class="calendar" id="calendar"></div><div id="appointmentsTable" style="margin-top:20px"></div></div></section>
+
+<section id="tasks" class="page"><div class="card"><div class="row"><div><h2>المهام وسير العمل</h2><span class="muted">تابع إنجاز العمل خطوة بخطوة</span></div><button class="btn" onclick="openModal('task')">＋ مهمة</button></div><div id="tasksTable"></div></div></section>
+
+<section id="employees" class="page"><div class="card"><div class="row"><div><h2>الموظفون</h2><span class="muted">الرواتب، الوظائف وحالة الموظف</span></div><button class="btn" onclick="openModal('employee')">＋ موظف</button></div><div id="employeesTable"></div></div></section>
+
+<section id="finance" class="page"><div class="grid">
+<div class="card kpi"><small>الإيرادات</small><b id="income">0</b> د.أ</div><div class="card kpi"><small>المصروفات</small><b id="expenses">0</b> د.أ</div><div class="card kpi"><small>الصافي</small><b id="profit">0</b> د.أ</div><div class="card kpi"><small>عدد العمليات</small><b id="txCount">0</b></div>
+</div><div class="card" style="margin-top:15px"><div class="row"><h2>الحركات المالية</h2><div><button class="btn ok" onclick="openModal('income')">＋ إيراد</button> <button class="btn danger" onclick="openModal('expense')">＋ مصروف</button></div></div><div id="financeTable"></div></div></section>
+
+<section id="inventory" class="page"><div class="card"><div class="row"><div><h2>المخزون</h2><span class="muted">المنتجات والكميات والتنبيه عند الانخفاض</span></div><button class="btn" onclick="openModal('product')">＋ منتج</button></div><div id="inventoryTable"></div></div></section>
+
+<section id="notes" class="page"><div class="card"><div class="row"><div><h2>الملاحظات</h2><span class="muted">أفكار ومعلومات مهمة داخل Vactori</span></div><button class="btn" onclick="openModal('note')">＋ ملاحظة</button></div><div id="notesList" class="grid"></div></div></section>
+
+
+<section id="attendance" class="page">
+<div class="card">
+  <div class="row"><div><h2>🕘 الحضور والانصراف</h2><span class="muted">تسجيل دخول الموظفين وخروجهم وحساب التأخير والعمل الإضافي</span></div>
+  <button class="btn" onclick="openModal('attendance')">＋ تسجيل حضور يدوي</button></div>
+  <div class="grid" style="margin-top:15px">
+    <div class="card kpi"><small>حاضر اليوم</small><b id="attPresent">0</b></div>
+    <div class="card kpi"><small>متأخر اليوم</small><b id="attLate">0</b></div>
+    <div class="card kpi"><small>غائب اليوم</small><b id="attAbsent">0</b></div>
+    <div class="card kpi"><small>خصومات اليوم</small><b id="attDeductions">0</b> د.أ</div>
+  </div>
+  <div class="notice">سياسة الدوام قابلة للتعديل: وقت بداية الدوام، فترة السماح، وقيمة خصم التأخير لكل دقيقة.</div>
+  <div id="attendanceTable"></div>
 </div>
 </section>
-<footer>Vactori — تنظيم أسهل، عمل أفضل ✦</footer>
+
+<section id="payroll" class="page">
+<div class="card">
+  <div class="row"><div><h2>💵 الرواتب والخصومات</h2><span class="muted">حساب الراتب الأساسي + الإضافي − التأخير − الغياب</span></div>
+  <button class="btn" onclick="openModal('payroll')">＋ إنشاء كشف راتب</button></div>
+  <div class="grid" style="margin-top:15px">
+    <div class="card kpi"><small>إجمالي الرواتب</small><b id="payTotal">0</b> د.أ</div>
+    <div class="card kpi"><small>إجمالي الخصومات</small><b id="payDeductions">0</b> د.أ</div>
+    <div class="card kpi"><small>الإضافي</small><b id="payOvertime">0</b> د.أ</div>
+    <div class="card kpi"><small>صافي المستحق</small><b id="payNet">0</b> د.أ</div>
+  </div>
+  <div id="payrollTable"></div>
 </div>
+</section>
+
+<section id="leave" class="page">
+<div class="card">
+  <div class="row"><div><h2>🏖️ الإجازات</h2><span class="muted">طلبات الإجازة والموافقة عليها</span></div>
+  <button class="btn" onclick="openModal('leave')">＋ طلب إجازة</button></div>
+  <div id="leaveTable"></div>
 </div>
+</section>
+
+
+<section id="employeePortal" class="page">
+<div class="card">
+ <div class="row"><div><h2>🧑‍💻 بوابة الموظف</h2><span class="muted">واجهة سريعة للموظف لتسجيل حضوره ومتابعة دوامه</span></div><div class="clock" id="liveClock">00:00:00</div></div>
+ <div class="grid" style="margin-top:15px">
+  <div class="card kpi"><small>حالة اليوم</small><b id="portalStatus">غير مسجل</b></div>
+  <div class="card kpi"><small>وقت الدخول</small><b id="portalIn">—</b></div>
+  <div class="card kpi"><small>وقت الخروج</small><b id="portalOut">—</b></div>
+  <div class="card kpi"><small>التأخير</small><b id="portalLate">0</b> دقيقة</div>
+ </div>
+ <div class="two">
+  <div class="card"><h3>تسجيل الدوام</h3><p class="muted">اختر الموظف ثم سجل الدخول أو الخروج.</p>
+   <div class="form"><div class="field"><label>الموظف</label><select id="portalEmployee"></select></div></div>
+   <button class="btn" onclick="portalClockIn()">🟢 تسجيل الدخول الآن</button>
+   <button class="btn secondary" onclick="portalClockOut()">🔴 تسجيل الخروج الآن</button>
+  </div>
+  <div class="card"><h3>تعليمات الموظف</h3><div class="list">
+   <div class="item">⏰ الحضور يحسب التأخير تلقائيًا</div>
+   <div class="item">💵 الخصم يدخل في كشف الراتب</div>
+   <div class="item">📅 الإجازات تظهر للإدارة للموافقة</div>
+  </div></div>
+ </div>
+</div>
+</section>
+
+<section id="departments" class="page"><div class="card">
+<div class="row"><div><h2>🏢 الأقسام والصلاحيات</h2><span class="muted">نظّم الموظفين حسب الأقسام والأدوار</span></div><button class="btn" onclick="openModal('department')">＋ قسم</button></div>
+<div id="departmentsTable"></div></div></section>
+
+<section id="shifts" class="page"><div class="card">
+<div class="row"><div><h2>🗓️ الورديات</h2><span class="muted">تعريف ورديات مختلفة ومتابعة التزام الموظفين</span></div><button class="btn" onclick="openModal('shift')">＋ وردية</button></div>
+<div id="shiftsTable"></div></div></section>
+
+<section id="invoices" class="page"><div class="card">
+<div class="row"><div><h2>🧾 الفواتير</h2><span class="muted">إنشاء فواتير وتتبع حالتها</span></div><button class="btn" onclick="openModal('invoice')">＋ فاتورة</button></div>
+<div id="invoicesTable"></div></div></section>
+
+<section id="crm" class="page"><div class="card">
+<div class="row"><div><h2>🎯 المبيعات CRM</h2><span class="muted">حوّل العملاء المحتملين إلى صفقات وتابع مراحل البيع</span></div><button class="btn" onclick="openModal('deal')">＋ صفقة</button></div>
+<div class="grid" id="crmStats" style="margin:15px 0"></div><div id="crmTable"></div></div></section>
+
+<section id="tickets" class="page"><div class="card">
+<div class="row"><div><h2>🎫 الدعم والشكاوى</h2><span class="muted">استقبل المشاكل وتابع حلها</span></div><button class="btn" onclick="openModal('ticket')">＋ تذكرة</button></div>
+<div id="ticketsTable"></div></div></section>
+
+<section id="notifications" class="page"><div class="card">
+<div class="row"><div><h2>🔔 مركز التنبيهات</h2><span class="muted">تذكيرات تلقائية للدوام والمخزون والمواعيد</span></div><button class="btn secondary" onclick="generateNotifications()">تحديث التنبيهات</button></div>
+<div id="notificationsList" class="list"></div></div></section>
+
+<section id="activity" class="page"><div class="card">
+<div class="row"><div><h2>🛡️ سجل النشاط</h2><span class="muted">تتبع أهم العمليات داخل النظام</span></div><button class="btn danger" onclick="clearActivity()">مسح السجل</button></div>
+<div id="activityTable"></div></div></section>
+
+<section id="reports" class="page"><div class="grid"><div class="card kpi"><small>معدل إنجاز المهام</small><b id="taskRate">0%</b></div><div class="card kpi"><small>قيمة المخزون</small><b id="stockValue">0</b> د.أ</div><div class="card kpi"><small>متوسط قيمة العميل</small><b id="avgCustomer">0</b> د.أ</div><div class="card kpi"><small>المواعيد المكتملة</small><b id="doneAppointments">0</b></div></div><div class="two"><div class="card"><h2>ملخص الأعمال</h2><div id="reportSummary"></div></div><div class="card"><h2>نسخ احتياطي</h2><p class="muted">احفظ نسخة من بيانات Vactori أو استعدها لاحقًا.</p><button class="btn" onclick="exportData()">⬇️ تصدير البيانات</button><label class="btn secondary" style="display:inline-block;margin-right:5px">⬆️ استيراد <input type="file" accept=".json" onchange="importData(this.files[0])" hidden></label></div></div></section>
+
+<section id="settings" class="page"><div class="card"><h2>إعدادات Vactori</h2><div class="notice">👤 الحساب الحالي: <b id="settingsUser">—</b> — يمكنك تسجيل الخروج من أسفل القائمة الجانبية.</div><div class="form">
+<div class="field"><label>اسم النشاط</label><input id="bizName" oninput="saveSettings()" placeholder="Vactori"></div>
+<div class="field"><label>العملة</label><select id="currency" onchange="saveSettings()"><option>د.أ</option><option>$</option><option>€</option></select></div>
+</div><div class="card" style="margin-top:15px"><h3>⏰ سياسة الدوام والخصومات</h3>
+<div class="form">
+<div class="field"><label>بداية الدوام</label><input id="workStart" type="time" value="08:00" onchange="saveWorkSettings()"></div>
+<div class="field"><label>فترة السماح بالدقائق</label><input id="grace" type="number" min="0" value="10" onchange="saveWorkSettings()"></div>
+<div class="field"><label>خصم كل دقيقة تأخير (د.أ)</label><input id="latePerMinute" type="number" min="0" step="0.01" value="0.25" onchange="saveWorkSettings()"></div>
+<div class="field"><label>معامل خصم الغياب من الراتب</label><input id="absenceDeduction" type="number" min="0" step="0.1" value="1" onchange="saveWorkSettings()"></div>
+</div>
+<div class="notice">مثال: دوام 08:00 + سماح 10 دقائق = لا يوجد خصم حتى 08:10. بعد ذلك يُحسب الخصم حسب قيمة الدقيقة التي تحددها.</div>
+</div>
+<div class="three"><div class="card"><h3>🔔 الإشعارات</h3><p class="muted">تنبيهات المواعيد والمخزون والمهام.</p><button class="btn secondary" onclick="toast('تم تفعيل التنبيهات داخل التطبيق')">تفعيل</button></div><div class="card"><h3>🔐 الأمان</h3><p class="muted">بيانات هذه النسخة محفوظة محليًا في المتصفح.</p><button class="btn secondary" onclick="toast('نظام الحماية المحلي يعمل')">فحص</button></div><div class="card"><h3>☁️ السحابة</h3><p class="muted">جاهز للربط مع Supabase في المرحلة التالية.</p><button class="btn secondary" onclick="toast('سنربط Supabase في النسخة السحابية')">تجهيز</button></div></div></div></section>
+</main>
+</div>
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="box"><div class="row"><h2 id="modalTitle">إضافة</h2><button class="btn secondary" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
+<div id="toast" class="toast"></div>
+
 <script>
-function openHome(){document.getElementById('welcome').style.display='none';document.getElementById('home').style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
-function showWelcome(){document.getElementById('home').style.display='none';document.getElementById('welcome').style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
+const KEY='vactori_pro_v2';
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{customers:[],appointments:[],tasks:[],employees:[],finance:[],inventory:[],notes:[],settings:{biz:'Vactori',currency:'د.أ'},users:[],session:null};
+db.users=db.users||[]; db.session=db.session||null; db.settings=db.settings||{biz:'Vactori',currency:'د.أ'};
+db.attendance=db.attendance||[]; db.payroll=db.payroll||[]; db.leaves=db.leaves||[];
+db.departments=db.departments||[]; db.shifts=db.shifts||[]; db.invoices=db.invoices||[];
+db.deals=db.deals||[]; db.tickets=db.tickets||[]; db.notifications=db.notifications||[];
+db.activity=db.activity||[];
+db.settings.workStart=db.settings.workStart||'08:00';
+db.settings.grace=db.settings.grace??10;
+db.settings.latePerMinute=db.settings.latePerMinute??0.25;
+db.settings.absenceDeduction=db.settings.absenceDeduction??1;
+
+
+const $=id=>document.getElementById(id), today=()=>new Date().toISOString().slice(0,10);
+
+let authMode='login';
+function switchAuth(mode){
+  authMode=mode;
+  $('loginTab').classList.toggle('active',mode==='login');
+  $('signupTab').classList.toggle('active',mode==='signup');
+  $('nameField').style.display=mode==='signup'?'grid':'none';
+  $('confirmField').style.display=mode==='signup'?'grid':'none';
+  $('authSubmit').textContent=mode==='signup'?'إنشاء الحساب':'تسجيل الدخول';
+  $('authPassword').autocomplete=mode==='signup'?'new-password':'current-password';
+  clearAuthMessage();
+}
+function clearAuthMessage(){ $('authError').style.display='none'; $('authSuccess').style.display='none'; }
+function authMessage(type,msg){clearAuthMessage();let x=$(type==='error'?'authError':'authSuccess');x.textContent=msg;x.style.display='block'}
+function hashPassword(s){
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
+  return (h>>>0).toString(16);
+}
+function submitAuth(e){
+  e.preventDefault();
+  let email=$('authEmail').value.trim().toLowerCase(), pass=$('authPassword').value, name=$('authName').value.trim();
+  if(!email||!pass)return authMessage('error','يرجى تعبئة جميع الحقول.');
+  if(pass.length<6)return authMessage('error','كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
+  if(authMode==='signup'){
+    if(!name)return authMessage('error','اكتب اسمك أو اسم النشاط.');
+    if($('authConfirm').value!==pass)return authMessage('error','تأكيد كلمة المرور غير مطابق.');
+    if(db.users.some(u=>u.email===email))return authMessage('error','هذا البريد مسجل بالفعل. جرّب تسجيل الدخول.');
+    db.users.push({id:Date.now(),name,email,password:hashPassword(pass),createdAt:new Date().toISOString()});
+    db.session={userId:db.users[db.users.length-1].id,remember:$('rememberMe').checked};
+    saveAuthOnly();
+    authMessage('success','تم إنشاء الحساب بنجاح! جارٍ فتح Vactori...');
+    setTimeout(showApp,450);
+  }else{
+    let u=db.users.find(u=>u.email===email);
+    if(!u)return authMessage('error','الحساب غير موجود. اختر إنشاء حساب أولًا.');
+    if(u.password!==hashPassword(pass))return authMessage('error','كلمة المرور غير صحيحة.');
+    db.session={userId:u.id,remember:$('rememberMe').checked};
+    saveAuthOnly();
+    showApp();
+  }
+}
+function saveAuthOnly(){localStorage.setItem(KEY,JSON.stringify(db))}
+function currentUser(){return db.users.find(u=>u.id===db.session?.userId)}
+function showApp(){
+  let u=currentUser(); if(!u)return;
+  $('authScreen').style.display='none'; $('mainApp').classList.add('authed');
+  $('userChip').innerHTML='👤 <b>'+esc(u.name)+'</b><span style="font-size:10px">حساب محلي</span>';
+  renderAll();
+}
+function logout(){
+  db.session=null; saveAuthOnly();
+  $('mainApp').classList.remove('authed'); $('authScreen').style.display='flex';
+  $('authEmail').value=''; $('authPassword').value=''; $('authConfirm').value=''; $('authName').value='';
+  switchAuth('login'); toast('تم تسجيل الخروج');
+}
+function bootAuth(){
+  let u=currentUser();
+  if(u && db.session?.remember){showApp()} else {
+    db.session=null; saveAuthOnly(); $('mainApp').classList.remove('authed'); $('authScreen').style.display='flex';
+  }
+}
+
+function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
+function money(n){return (Number(n)||0).toLocaleString('en-US')+' '+db.settings.currency}
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function toast(s){let t=$('toast');t.textContent=s;t.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display='none',2400)}
+function go(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');else{let b=[...document.querySelectorAll('#nav button')].find(x=>x.textContent.includes($(id).querySelector('h2')?.textContent||'___'));if(b)b.classList.add('active')} $('title').textContent={dashboard:'لوحة التحكم',customers:'العملاء',appointments:'المواعيد',tasks:'المهام',employees:'الموظفون',finance:'المالية',inventory:'المخزون',notes:'الملاحظات',reports:'التقارير',settings:'الإعدادات',attendance:'الحضور والانصراف',payroll:'الرواتب والخصومات',leave:'الإجازات',employeePortal:'بوابة الموظف',departments:'الأقسام',shifts:'الورديات',invoices:'الفواتير',crm:'المبيعات CRM',tickets:'الدعم والشكاوى',notifications:'التنبيهات',activity:'سجل النشاط'}[id];renderAll();window.scrollTo(0,0)}
+function openModal(type){let cfg={
+customer:['عميل جديد',[['name','اسم العميل'],['phone','رقم الهاتف'],['email','البريد الإلكتروني'],['note','ملاحظة']]],
+appointment:['موعد جديد',[['customer','اسم العميل'],['date','التاريخ','date'],['time','الوقت','time'],['status','الحالة']]],
+task:['مهمة جديدة',[['title','عنوان المهمة'],['owner','المسؤول'],['due','تاريخ الاستحقاق','date'],['priority','الأولوية']]],
+employee:['موظف جديد',[['name','اسم الموظف'],['role','الوظيفة'],['salary','الراتب']]],
+income:['إيراد جديد',[['desc','الوصف'],['amount','المبلغ','number'],['date','التاريخ','date']]],
+expense:['مصروف جديد',[['desc','الوصف'],['amount','المبلغ','number'],['date','التاريخ','date']]],
+product:['منتج جديد',[['name','اسم المنتج'],['qty','الكمية','number'],['min','حد التنبيه','number'],['price','سعر الوحدة','number']]],
+note:['ملاحظة جديدة',[['title','العنوان'],['text','المحتوى']]],
+attendance:['تسجيل حضور',[['employee','اسم الموظف'],['date','التاريخ','date'],['in','وقت الدخول','time'],['out','وقت الخروج','time']]],
+payroll:['كشف راتب',[['employee','اسم الموظف'],['month','الشهر'],['bonus','حوافز','number']]],
+leave:['طلب إجازة',[['employee','اسم الموظف'],['from','من','date'],['to','إلى','date'],['type','نوع الإجازة']]],
+department:['قسم جديد',[['name','اسم القسم'],['manager','مدير القسم']]],
+shift:['وردية جديدة',[['name','اسم الوردية'],['start','بداية','time'],['end','نهاية','time']]],
+invoice:['فاتورة جديدة',[['customer','العميل'],['amount','المبلغ','number'],['date','التاريخ','date'],['status','الحالة']]],
+deal:['صفقة جديدة',[['customer','العميل'],['value','قيمة الصفقة','number'],['stage','المرحلة']]],
+ticket:['تذكرة دعم',[['customer','العميل'],['subject','الموضوع'],['priority','الأولوية'],['status','الحالة']]],
+
+}[type];$('modalTitle').textContent=cfg[0];$('modalBody').innerHTML='<div class="form">'+cfg[1].map(f=>`<div class="field"><label>${f[1]}</label><input id="m_${f[0]}" type="${f[2]||'text'}"></div>`).join('')+'</div><button class="btn" onclick="submitModal(\''+type+'\')">حفظ</button>';$('modal').style.display='flex'}
+function closeModal(){$('modal').style.display='none'}
+function v(k){return $('m_'+k).value}
+function submitModal(type){
+ let id=Date.now(),o={id};
+ if(type==='customer')o={id,name:v('name'),phone:v('phone'),email:v('email'),note:v('note')},db.customers.push(o);
+ if(type==='appointment')o={id,customer:v('customer'),date:v('date'),time:v('time'),status:v('status')||'قادم'},db.appointments.push(o);
+ if(type==='task')o={id,title:v('title'),owner:v('owner'),due:v('due'),priority:v('priority')||'متوسطة',done:false},db.tasks.push(o);
+ if(type==='employee')o={id,name:v('name'),role:v('role'),salary:Number(v('salary'))||0},db.employees.push(o);
+ if(type==='income'||type==='expense')o={id,type:type==='income'?'income':'expense',desc:v('desc'),amount:Number(v('amount'))||0,date:v('date')||today()},db.finance.push(o);
+ if(type==='product')o={id,name:v('name'),qty:Number(v('qty'))||0,min:Number(v('min'))||0,price:Number(v('price'))||0},db.inventory.push(o);
+ if(type==='note')o={id,title:v('title'),text:v('text'),date:today()},db.notes.push(o);
+ if(type==='attendance'){let emp=v('employee'),date=v('date')||today(),tin=v('in'),tout=v('out');let late=calcLate(tin),ded=late*Number(db.settings.latePerMinute||0);o={id,employee:emp,date,in:tin,out:tout,late,deduction:ded,status:late>0?'متأخر':'حاضر'};db.attendance.push(o)}
+ if(type==='payroll'){let emp=v('employee'),month=v('month'),bonus=Number(v('bonus'))||0;let a=db.attendance.filter(x=>x.employee===emp&&x.date.startsWith(month));let e=db.employees.find(x=>x.name===emp);let base=Number(e?.salary)||0,late=a.reduce((s,x)=>s+Number(x.deduction||0),0),overtime=a.reduce((s,x)=>s+overtimePay(x),0);o={id,employee:emp,month,base,bonus,lateDeduction:late,overtime,net:base+bonus+overtime-late};db.payroll.push(o)}
+ if(type==='leave')o={id,employee:v('employee'),from:v('from'),to:v('to'),type:v('type'),status:'قيد المراجعة'},db.leaves.push(o);
+ if(type==='department')o={id,name:v('name'),manager:v('manager')},db.departments.push(o);
+ if(type==='shift')o={id,name:v('name'),start:v('start'),end:v('end')},db.shifts.push(o);
+ if(type==='invoice')o={id,number:'INV-'+String(id).slice(-6),customer:v('customer'),amount:Number(v('amount'))||0,date:v('date')||today(),status:v('status')||'غير مدفوعة'},db.invoices.push(o);
+ if(type==='deal')o={id,customer:v('customer'),value:Number(v('value'))||0,stage:v('stage')||'جديدة'},db.deals.push(o);
+ if(type==='ticket')o={id,customer:v('customer'),subject:v('subject'),priority:v('priority')||'متوسطة',status:v('status')||'مفتوحة'},db.tickets.push(o);
+ logActivity('إضافة','تمت إضافة '+type);
+
+ closeModal();save();toast('تم الحفظ بنجاح ✓')
+}
+function del(arr,id){db[arr]=db[arr].filter(x=>x.id!=id);save();toast('تم الحذف')}
+function toggleTask(id){let x=db.tasks.find(x=>x.id==id);if(x)x.done=!x.done;save()}
+function table(arr,cols,labels,actions=true){let data=db[arr];if(!data.length)return '<div class="empty">لا توجد بيانات حتى الآن.</div>';return '<div class="table-wrap"><table><thead><tr>'+cols.map(c=>`<th>${labels[c]}</th>`).join('')+(actions?'<th>إجراء</th>':'')+'</tr></thead><tbody>'+data.map(x=>'<tr>'+cols.map(c=>`<td>${esc(x[c])}</td>`).join('')+(actions?`<td><button class="btn danger" onclick="del('${arr}',${x.id})">حذف</button></td>`:'')+'</tr>').join('')+'</tbody></table></div>'}
+
+function calcLate(time){
+  if(!time)return 0;
+  let [h,m]=time.split(':').map(Number), [sh,sm]=String(db.settings.workStart||'08:00').split(':').map(Number);
+  let mins=(h*60+m)-(sh*60+sm)-Number(db.settings.grace||0);
+  return Math.max(0,mins);
+}
+function overtimePay(a){
+  if(!a.out||!a.in)return 0;
+  let [ih,im]=a.in.split(':').map(Number),[oh,om]=a.out.split(':').map(Number);
+  let total=(oh*60+om)-(ih*60+im), normal=8*60;
+  let extra=Math.max(0,total-normal);
+  let emp=db.employees.find(x=>x.name===a.employee), hourly=(Number(emp?.salary)||0)/(26*8);
+  return extra*hourly*1.25/60;
+}
+function renderAttendance(){
+ let t=today(), rows=db.attendance.filter(x=>x.date===t);
+ $('attPresent').textContent=rows.filter(x=>x.status==='حاضر').length;
+ $('attLate').textContent=rows.filter(x=>x.late>0).length;
+ $('attAbsent').textContent=Math.max(0,db.employees.length-rows.length);
+ $('attDeductions').textContent=money(rows.reduce((s,x)=>s+Number(x.deduction||0),0));
+ $('attendanceTable').innerHTML=rows.length?table('attendance',['employee','date','in','out','late','deduction','status'],{employee:'الموظف',date:'التاريخ',in:'الدخول',out:'الخروج',late:'دقائق التأخير',deduction:'الخصم',status:'الحالة'}):'<div class="empty">لم يتم تسجيل حضور اليوم.</div>';
+}
+function renderPayroll(){
+ let total=db.payroll.reduce((s,x)=>s+Number(x.base||0),0),ded=db.payroll.reduce((s,x)=>s+Number(x.lateDeduction||0),0),ot=db.payroll.reduce((s,x)=>s+Number(x.overtime||0),0),net=db.payroll.reduce((s,x)=>s+Number(x.net||0),0);
+ $('payTotal').textContent=total.toLocaleString();$('payDeductions').textContent=ded.toLocaleString();$('payOvertime').textContent=ot.toLocaleString();$('payNet').textContent=net.toLocaleString();
+ $('payrollTable').innerHTML=table('payroll',['employee','month','base','bonus','lateDeduction','overtime','net'],{employee:'الموظف',month:'الشهر',base:'الأساسي',bonus:'حوافز',lateDeduction:'خصم التأخير',overtime:'الإضافي',net:'الصافي'});
+}
+function renderLeaves(){
+ let rows=db.leaves;
+ if(!rows.length){$('leaveTable').innerHTML='<div class="empty">لا توجد طلبات إجازة.</div>';return}
+ $('leaveTable').innerHTML='<div class="table-wrap"><table><thead><tr><th>الموظف</th><th>من</th><th>إلى</th><th>النوع</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>'+
+ rows.map(x=>`<tr><td>${esc(x.employee)}</td><td>${x.from}</td><td>${x.to}</td><td>${esc(x.type)}</td><td><span class="badge ${x.status==='مقبولة'?'b-ok':x.status==='مرفوضة'?'b-danger':'b-warn'}">${x.status}</span></td><td>${x.status==='قيد المراجعة'?`<button class="btn ok" onclick="leaveDecision(${x.id},'مقبولة')">موافقة</button> <button class="btn danger" onclick="leaveDecision(${x.id},'مرفوضة')">رفض</button>`:`<button class="btn danger" onclick="del('leaves',${x.id})">حذف</button>`}</td></tr>`).join('')+'</tbody></table></div>';
+}
+function leaveDecision(id,status){let x=db.leaves.find(x=>x.id==id);if(x)x.status=status;save();toast(status==='مقبولة'?'تمت الموافقة على الإجازة':'تم رفض الإجازة')}
+
+
+function logActivity(action,detail){
+ db.activity.unshift({id:Date.now()+Math.random(),date:new Date().toLocaleString('ar-JO'),action,detail});
+ db.activity=db.activity.slice(0,200); localStorage.setItem(KEY,JSON.stringify(db));
+}
+function nowTime(){return new Date().toTimeString().slice(0,5)}
+function portalClockIn(){
+ let emp=$('portalEmployee').value;if(!emp)return toast('اختر الموظف أولًا');
+ let d=today(),existing=db.attendance.find(x=>x.employee===emp&&x.date===d);
+ if(existing)return toast('تم تسجيل دخول هذا الموظف اليوم بالفعل');
+ let tin=nowTime(),late=calcLate(tin),ded=late*Number(db.settings.latePerMinute||0);
+ db.attendance.push({id:Date.now(),employee:emp,date:d,in:tin,out:'',late,deduction:ded,status:late>0?'متأخر':'حاضر'});
+ logActivity('حضور',emp+' سجل دخول الساعة '+tin);save();toast(late?`تم التسجيل — تأخير ${late} دقيقة`:'تم تسجيل الحضور ✓');
+}
+function portalClockOut(){
+ let emp=$('portalEmployee').value,d=today(),a=db.attendance.find(x=>x.employee===emp&&x.date===d);
+ if(!a)return toast('لم يتم تسجيل الدخول لهذا الموظف اليوم');
+ if(a.out)return toast('تم تسجيل الخروج مسبقًا');
+ a.out=nowTime();a.overtime=overtimePay(a);a.status='انصرف';logActivity('انصراف',emp+' سجل خروج الساعة '+a.out);save();toast('تم تسجيل الانصراف ✓');
+}
+function renderPortal(){
+ let sel=$('portalEmployee'); if(!sel)return;
+ sel.innerHTML=db.employees.map(x=>`<option>${esc(x.name)}</option>`).join('');
+ let a=db.attendance.find(x=>x.employee===sel.value&&x.date===today());
+ $('portalStatus').textContent=a?(a.out?'انصرف':(a.late?'متأخر':'حاضر')):'غير مسجل';
+ $('portalIn').textContent=a?.in||'—';$('portalOut').textContent=a?.out||'—';$('portalLate').textContent=a?.late||0;
+}
+function renderDepartments(){$('departmentsTable').innerHTML=table('departments',['name','manager'],{name:'القسم',manager:'المدير'})}
+function renderShifts(){$('shiftsTable').innerHTML=table('shifts',['name','start','end'],{name:'الوردية',start:'البداية',end:'النهاية'})}
+function renderInvoices(){$('invoicesTable').innerHTML=table('invoices',['number','customer','amount','date','status'],{number:'رقم الفاتورة',customer:'العميل',amount:'المبلغ',date:'التاريخ',status:'الحالة'})}
+function renderCRM(){
+ let stages=['جديدة','تواصل','عرض سعر','مغلقة'];
+ $('crmStats').innerHTML=stages.map(s=>`<div class="card kpi"><small>${s}</small><b>${db.deals.filter(x=>x.stage===s).length}</b></div>`).join('');
+ $('crmTable').innerHTML='<div class="pipeline">'+stages.map(s=>`<div class="stage"><b>${s}</b>${db.deals.filter(x=>x.stage===s).map(x=>`<div class="deal"><b>${esc(x.customer)}</b><br>${money(x.value)}</div>`).join('')||'<p class="muted">فارغ</p>'}</div>`).join('')+'</div>';
+}
+function renderTickets(){$('ticketsTable').innerHTML=table('tickets',['customer','subject','priority','status'],{customer:'العميل',subject:'الموضوع',priority:'الأولوية',status:'الحالة'})}
+function generateNotifications(){
+ let n=[];
+ let todayAppointments=db.appointments.filter(x=>x.date===today());if(todayAppointments.length)n.push('📅 لديك '+todayAppointments.length+' موعد اليوم');
+ let low=db.inventory.filter(x=>x.qty<=x.min);if(low.length)n.push('📦 يوجد '+low.length+' منتج منخفض المخزون');
+ let late=db.attendance.filter(x=>x.date===today()&&x.late>0);if(late.length)n.push('⏰ '+late.length+' موظف متأخر اليوم');
+ let open=db.tasks.filter(x=>!x.done);if(open.length)n.push('✅ لديك '+open.length+' مهمة مفتوحة');
+ db.notifications=n.map((text,i)=>({id:Date.now()+i,text,date:new Date().toLocaleString('ar-JO')}));localStorage.setItem(KEY,JSON.stringify(db));renderNotifications();toast('تم تحديث التنبيهات');
+}
+function renderNotifications(){$('notificationsList').innerHTML=db.notifications.length?db.notifications.map(x=>`<div class="item">${esc(x.text)}<small class="muted">${x.date}</small></div>`).join(''):'<div class="empty">لا توجد تنبيهات حالية.</div>'}
+function renderActivity(){$('activityTable').innerHTML=table('activity',['date','action','detail'],{date:'الوقت',action:'العملية',detail:'التفاصيل'})}
+function clearActivity(){db.activity=[];save();toast('تم مسح سجل النشاط')}
+
+function renderAll(){updateDashboard();$('customersTable').innerHTML=table('customers',['name','phone','email','note'],{name:'الاسم',phone:'الهاتف',email:'البريد',note:'ملاحظة'});$('appointmentsTable').innerHTML=table('appointments',['customer','date','time','status'],{customer:'العميل',date:'التاريخ',time:'الوقت',status:'الحالة'});$('employeesTable').innerHTML=table('employees',['name','role','salary'],{name:'الاسم',role:'الوظيفة',salary:'الراتب'});$('financeTable').innerHTML=table('finance',['type','desc','amount','date'],{type:'النوع',desc:'الوصف',amount:'المبلغ',date:'التاريخ'});$('inventoryTable').innerHTML=table('inventory',['name','qty','min','price'],{name:'المنتج',qty:'الكمية',min:'حد التنبيه',price:'السعر'});renderTasks();renderNotes();renderCalendar();renderReports();renderAttendance();renderPayroll();renderLeaves();renderPortal();renderDepartments();renderShifts();renderInvoices();renderCRM();renderTickets();renderNotifications();renderActivity();$('bizName').value=db.settings.biz;$('currency').value=db.settings.currency;$('workStart').value=db.settings.workStart;$('grace').value=db.settings.grace;$('latePerMinute').value=db.settings.latePerMinute;$('absenceDeduction').value=db.settings.absenceDeduction;let cu=currentUser();if($('settingsUser'))$('settingsUser').textContent=cu?cu.email:'—'}
+function updateDashboard(){let inc=db.finance.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),exp=db.finance.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);$('kCustomers').textContent=db.customers.length;$('kToday').textContent=db.appointments.filter(x=>x.date===today()).length;$('kTasks').textContent=db.tasks.filter(x=>!x.done).length;$('kBalance').textContent=money(inc-exp);$('dashAppointments').innerHTML=db.appointments.filter(x=>x.date>=today()).slice(0,5).map(x=>`<div class="item"><span>📅 <b>${esc(x.customer)}</b><br><small class="muted">${x.date} — ${x.time}</small></span><span class="badge b-purple">${esc(x.status)}</span></div>`).join('')||'<div class="empty">لا توجد مواعيد قادمة</div>';$('dashTasks').innerHTML=db.tasks.filter(x=>!x.done).slice(0,5).map(x=>`<div class="item"><span>${esc(x.title)}<br><small class="muted">${esc(x.owner||'بدون مسؤول')}</small></span><button class="btn ok" onclick="toggleTask(${x.id})">تم ✓</button></div>`).join('')||'<div class="empty">ممتاز! لا توجد مهام مفتوحة.</div>';$('lowStock').innerHTML=db.inventory.filter(x=>x.qty<=x.min).slice(0,5).map(x=>`<div class="item"><span>📦 ${esc(x.name)}</span><span class="badge b-danger">${x.qty}</span></div>`).join('')||'<div class="empty">المخزون جيد</div>';let vals=[100,150,90,180,130,210,170];$('miniChart').innerHTML=vals.map((x,i)=>`<div class="barbox"><div class="bar" style="height:${x/2}px"></div><span>${i+1}</span></div>`).join('')}
+function renderTasks(){$('tasksTable').innerHTML=db.tasks.length?'<div class="list">'+db.tasks.map(x=>`<div class="item"><span><b style="${x.done?'text-decoration:line-through':''}">${esc(x.title)}</b><br><small class="muted">${esc(x.owner||'')} ${x.due?'• '+x.due:''}</small></span><span><span class="badge ${x.priority==='عالية'?'b-danger':'b-purple'}">${esc(x.priority)}</span> <button class="btn ${x.done?'secondary':'ok'}" onclick="toggleTask(${x.id})">${x.done?'إرجاع':'تم ✓'}</button> <button class="btn danger" onclick="del('tasks',${x.id})">حذف</button></span></div>`).join('')+'</div>':'<div class="empty">لا توجد مهام.</div>'}
+function renderNotes(){$('notesList').innerHTML=db.notes.map(x=>`<div class="card"><div class="row"><h3>${esc(x.title)}</h3><button class="btn danger" onclick="del('notes',${x.id})">حذف</button></div><p>${esc(x.text)}</p><small class="muted">${x.date}</small></div>`).join('')||'<div class="empty">لا توجد ملاحظات.</div>'}
+function renderCalendar(){let ds=[...Array(14)].map((_,i)=>{let d=new Date();d.setDate(d.getDate()+i);return d.toISOString().slice(0,10)});$('calendar').innerHTML=ds.map((d,i)=>`<div class="day"><strong>${i===0?'اليوم':d}</strong>${db.appointments.filter(x=>x.date===d).map(x=>`<div class="event">${esc(x.time)} ${esc(x.customer)}</div>`).join('')}</div>`).join('')}
+function renderReports(){let done=db.tasks.filter(x=>x.done).length,total=db.tasks.length;let inc=db.finance.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),exp=db.finance.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);$('taskRate').textContent=(total?Math.round(done/total*100):0)+'%';$('stockValue').textContent=money(db.inventory.reduce((s,x)=>s+x.qty*x.price,0));$('avgCustomer').textContent=money(db.customers.length?inc/db.customers.length:0);$('doneAppointments').textContent=db.appointments.filter(x=>x.status==='مكتمل').length;$('reportSummary').innerHTML=`<p>العملاء: <b>${db.customers.length}</b></p><p>المواعيد: <b>${db.appointments.length}</b></p><p>المهام المكتملة: <b>${done} / ${total}</b></p><p>الإيرادات: <b>${money(inc)}</b></p><p>المصروفات: <b>${money(exp)}</b></p><p>صافي الربح: <b>${money(inc-exp)}</b></p>`;$('income').textContent=inc.toLocaleString();$('expenses').textContent=exp.toLocaleString();$('profit').textContent=(inc-exp).toLocaleString();$('txCount').textContent=db.finance.length}
+function toggleTheme(){document.body.classList.toggle('dark');localStorage.setItem('vactori_dark',document.body.classList.contains('dark'))}
+function quickAdd(){openModal('customer')}
+function globalSearch(q){q=q.toLowerCase().trim();if(!q)return;let hits=[...db.customers.map(x=>['عميل',x.name]),...db.employees.map(x=>['موظف',x.name]),...db.tasks.map(x=>['مهمة',x.title]),...db.notes.map(x=>['ملاحظة',x.title])].filter(x=>x[1].toLowerCase().includes(q));toast(hits.length?`وجدت ${hits.length} نتيجة: ${hits[0][0]} — ${hits[0][1]}`:'لا توجد نتيجة')}
+function saveWorkSettings(){db.settings.workStart=$('workStart').value||'08:00';db.settings.grace=Number($('grace').value)||0;db.settings.latePerMinute=Number($('latePerMinute').value)||0;db.settings.absenceDeduction=Number($('absenceDeduction').value)||0;save();toast('تم حفظ سياسة الدوام والخصومات')}
+function saveSettings(){db.settings.biz=$('bizName').value||'Vactori';db.settings.currency=$('currency').value;localStorage.setItem(KEY,JSON.stringify(db))}
+function exportData(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='vactori-backup.json';a.click();toast('تم تصدير النسخة الاحتياطية')}
+function importData(file){if(!file)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);save();toast('تم استيراد البيانات ✓')}catch(e){alert('ملف غير صالح')}};r.readAsText(file)}
+if(localStorage.getItem('vactori_dark')==='true')document.body.classList.add('dark');
+$('dateNow').textContent=new Date().toLocaleDateString('ar-JO',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+bootAuth();
 </script>
 </body>
 </html>
+<script>
+setInterval(function(){
+ const x=document.getElementById('liveClock');
+ if(x)x.textContent=new Date().toLocaleTimeString('ar-JO');
+},1000);
+</script>
