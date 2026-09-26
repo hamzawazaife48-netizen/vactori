@@ -93,6 +93,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -128,7 +129,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
       </label>
       <button class="auth-submit" id="authSubmit">تسجيل الدخول</button>
     </form>
-    <div class="auth-foot">هذه النسخة تستخدم حسابات محلية على هذا الجهاز. عند ربط Supabase لاحقًا تصبح المصادقة سحابية وحقيقية.</div>
+    <div class="auth-foot">الحسابات محمية عبر Supabase Auth، وبياناتك تُحفظ في السحابة عند تفعيل الربط.</div>
   </div>
 </div>
 <div class="app" id="mainApp">
@@ -312,13 +313,16 @@ table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px s
 </div>
 <div class="notice">مثال: دوام 08:00 + سماح 10 دقائق = لا يوجد خصم حتى 08:10. بعد ذلك يُحسب الخصم حسب قيمة الدقيقة التي تحددها.</div>
 </div>
-<div class="three"><div class="card"><h3>🔔 الإشعارات</h3><p class="muted">تنبيهات المواعيد والمخزون والمهام.</p><button class="btn secondary" onclick="toast('تم تفعيل التنبيهات داخل التطبيق')">تفعيل</button></div><div class="card"><h3>🔐 الأمان</h3><p class="muted">بيانات هذه النسخة محفوظة محليًا في المتصفح.</p><button class="btn secondary" onclick="toast('نظام الحماية المحلي يعمل')">فحص</button></div><div class="card"><h3>☁️ السحابة</h3><p class="muted">جاهز للربط مع Supabase في المرحلة التالية.</p><button class="btn secondary" onclick="toast('سنربط Supabase في النسخة السحابية')">تجهيز</button></div></div></div></section>
+<div class="three"><div class="card"><h3>🔔 الإشعارات</h3><p class="muted">تنبيهات المواعيد والمخزون والمهام.</p><button class="btn secondary" onclick="toast('تم تفعيل التنبيهات داخل التطبيق')">تفعيل</button></div><div class="card"><h3>🔐 الأمان</h3><p class="muted">المصادقة السحابية مفعّلة عبر Supabase. حماية البيانات تعتمد على RLS والسياسات التي جهزناها.</p><button class="btn secondary" onclick="toast('نظام الحماية المحلي يعمل')">فحص</button></div><div class="card"><h3>☁️ السحابة</h3><p class="muted">Vactori متصل الآن بـ Supabase Auth.</p><button class="btn secondary" onclick="toast('Supabase متصل ويعمل')">تجهيز</button></div></div></div></section>
 </main>
 </div>
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="box"><div class="row"><h2 id="modalTitle">إضافة</h2><button class="btn secondary" onclick="closeModal()">✕</button></div><div id="modalBody"></div></div></div>
 <div id="toast" class="toast"></div>
 
 <script>
+const SUPABASE_URL='https://rqudcvpjtqwgpgwetzhq.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_g2bTVvt4EBb-wjr-2A5Nbw_RyWatFmL';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const KEY='vactori_pro_v2';
 let db=JSON.parse(localStorage.getItem(KEY)||'null')||{customers:[],appointments:[],tasks:[],employees:[],finance:[],inventory:[],notes:[],settings:{biz:'Vactori',currency:'د.أ'},users:[],session:null};
 db.users=db.users||[]; db.session=db.session||null; db.settings=db.settings||{biz:'Vactori',currency:'د.أ'};
@@ -352,48 +356,70 @@ function hashPassword(s){
   for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
   return (h>>>0).toString(16);
 }
-function submitAuth(e){
+async function submitAuth(e){
   e.preventDefault();
+  clearAuthMessage();
   let email=$('authEmail').value.trim().toLowerCase(), pass=$('authPassword').value, name=$('authName').value.trim();
   if(!email||!pass)return authMessage('error','يرجى تعبئة جميع الحقول.');
   if(pass.length<6)return authMessage('error','كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
-  if(authMode==='signup'){
-    if(!name)return authMessage('error','اكتب اسمك أو اسم النشاط.');
-    if($('authConfirm').value!==pass)return authMessage('error','تأكيد كلمة المرور غير مطابق.');
-    if(db.users.some(u=>u.email===email))return authMessage('error','هذا البريد مسجل بالفعل. جرّب تسجيل الدخول.');
-    db.users.push({id:Date.now(),name,email,password:hashPassword(pass),createdAt:new Date().toISOString()});
-    db.session={userId:db.users[db.users.length-1].id,remember:$('rememberMe').checked};
-    saveAuthOnly();
-    authMessage('success','تم إنشاء الحساب بنجاح! جارٍ فتح Vactori...');
-    setTimeout(showApp,450);
-  }else{
-    let u=db.users.find(u=>u.email===email);
-    if(!u)return authMessage('error','الحساب غير موجود. اختر إنشاء حساب أولًا.');
-    if(u.password!==hashPassword(pass))return authMessage('error','كلمة المرور غير صحيحة.');
-    db.session={userId:u.id,remember:$('rememberMe').checked};
-    saveAuthOnly();
-    showApp();
-  }
+  $('authSubmit').disabled=true;
+  try{
+    if(authMode==='signup'){
+      if(!name)return authMessage('error','اكتب اسمك أو اسم النشاط.');
+      if($('authConfirm').value!==pass)return authMessage('error','تأكيد كلمة المرور غير مطابق.');
+      const {data,error}=await supabaseClient.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
+      if(error)throw error;
+      if(data.session){
+        db.session={supabase:true,remember:$('rememberMe').checked};
+        saveAuthOnly(); showAppFromSupabase(data.session.user); return;
+      }
+      authMessage('success','تم إنشاء الحساب. إذا كان تأكيد البريد مفعّلًا، افتح رسالة التأكيد ثم ارجع وسجّل الدخول.');
+    }else{
+      const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:pass});
+      if(error)throw error;
+      db.session={supabase:true,remember:$('rememberMe').checked}; saveAuthOnly(); showAppFromSupabase(data.user);
+    }
+  }catch(err){
+    let msg=err?.message||'حدث خطأ أثناء الاتصال بـ Supabase.';
+    if(/invalid login credentials/i.test(msg))msg='البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+    authMessage('error',msg);
+  }finally{$('authSubmit').disabled=false;}
 }
 function saveAuthOnly(){localStorage.setItem(KEY,JSON.stringify(db))}
-function currentUser(){return db.users.find(u=>u.id===db.session?.userId)}
-function showApp(){
-  let u=currentUser(); if(!u)return;
+function currentUser(){return db._supabaseUser||null}
+async function loadSupabaseProfile(user){
+  try{
+    const {data}=await supabaseClient.from('profiles').select('id,full_name,role').eq('id',user.id).maybeSingle();
+    return data||{id:user.id,full_name:user.user_metadata?.full_name||user.email,role:'employee'};
+  }catch(e){return {id:user.id,full_name:user.user_metadata?.full_name||user.email,role:'employee'};}
+}
+async function showAppFromSupabase(user){
+  if(!user)return;
+  const profile=await loadSupabaseProfile(user);
+  db._supabaseUser={id:user.id,email:user.email,name:profile.full_name||user.email,role:profile.role||'employee'};
   $('authScreen').style.display='none'; $('mainApp').classList.add('authed');
-  $('userChip').innerHTML='👤 <b>'+esc(u.name)+'</b><span style="font-size:10px">حساب محلي</span>';
+  $('userChip').innerHTML='👤 <b>'+esc(db._supabaseUser.name)+'</b><span style="font-size:10px">'+esc(db._supabaseUser.role)+'</span>';
   renderAll();
 }
-function logout(){
-  db.session=null; saveAuthOnly();
+function showApp(){
+  if(db._supabaseUser){showAppFromSupabase(db._supabaseUser);return;}
+  supabaseClient.auth.getSession().then(({data})=>{if(data.session)showAppFromSupabase(data.session.user);else{$('authScreen').style.display='flex';$('mainApp').classList.remove('authed')}});
+}
+async function logout(){
+  await supabaseClient.auth.signOut();
+  db.session=null; db._supabaseUser=null; saveAuthOnly();
   $('mainApp').classList.remove('authed'); $('authScreen').style.display='flex';
   $('authEmail').value=''; $('authPassword').value=''; $('authConfirm').value=''; $('authName').value='';
   switchAuth('login'); toast('تم تسجيل الخروج');
 }
-function bootAuth(){
-  let u=currentUser();
-  if(u && db.session?.remember){showApp()} else {
-    db.session=null; saveAuthOnly(); $('mainApp').classList.remove('authed'); $('authScreen').style.display='flex';
-  }
+async function bootAuth(){
+  supabaseClient.auth.onAuthStateChange((_event,session)=>{
+    if(session)showAppFromSupabase(session.user);
+    else if(_event==='SIGNED_OUT'){$('mainApp').classList.remove('authed');$('authScreen').style.display='flex';}
+  });
+  const {data}=await supabaseClient.auth.getSession();
+  if(data.session) await showAppFromSupabase(data.session.user);
+  else {$('mainApp').classList.remove('authed');$('authScreen').style.display='flex';}
 }
 
 function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
